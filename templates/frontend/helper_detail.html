@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ object }}
+<ul>
+  {% for event in object.event_set.all %}
+    <li>{{ event }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

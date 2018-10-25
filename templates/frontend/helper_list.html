@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Helpers</h2>
+    <p>Not in this list? Add yourself <a href="{% url 'helper-add' %}">here</a>.</p>
+    <ul>
+        {% for helper in object_list %}
+        <li>
+          {{ helper }}
+          <a href="{% url 'helper-claim' pk=helper.pk %}">login</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

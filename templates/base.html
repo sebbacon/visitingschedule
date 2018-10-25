@@ -1,0 +1,9 @@
+<html>
+  {% if request.session.helper %}
+  Logged in as {{ request.session.helper }}. <a href="{% url 'helper-logout' %}">Log out.</a> <a href="{% url 'helper-list' %}">Log in as someone else</a>
+  {% else %}
+  Please <a href="{% url 'helper-list' %}">log in</a> to claim a slot.
+  {% endif %}
+  {% block content %}{% endblock %}
+
+</html>

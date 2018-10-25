@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Events</h2>
+    <ul>
+        {% for event in object_list %}
+        <li>
+          {{ event }}
+          {% if request.session.helper %}
+            {% if not event.helper %}
+              <a href="{% url 'event-claim' pk=event.pk %}">claim</a>
+            {% elif event.helper.pk == request.session.helper %}
+              <a href="{% url 'event-unclaim' pk=event.pk %}">unclaim</a>
+            {% endif %}
+          {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
