@@ -2,18 +2,26 @@
 
 {% block content %}
     <h2>Events</h2>
-    <ul>
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Slot</th>
+        <th>Helper</th>
+      </tr>
         {% for event in object_list %}
-        <li>
-          {{ event }}
-          {% if request.session.helper %}
+      <tr>
+        <td>{% if event.slot == 'MORNING' %}{{ event.date }}{% endif %}</td>
+        <td>{{ event.slot }}</td>
+        <td>
             {% if not event.helper %}
               <a href="{% url 'event-claim' pk=event.pk %}">claim</a>
             {% elif event.helper.pk == request.session.helper %}
-              <a href="{% url 'event-unclaim' pk=event.pk %}">unclaim</a>
+              You (<a href="{% url 'event-unclaim' pk=event.pk %}">unclaim</a>)
+            {% else %}
+               {{ event.helper }}
             {% endif %}
-          {% endif %}
-        </li>
+        </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
 {% endblock %}
