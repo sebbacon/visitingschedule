@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Calendar</h2>
 <p>There are morning slots and afternoon slots.</p>
-<p>To show you're going in a particular slot, <a href="{% url 'helper-list' %}">log in</a> and then click the <span class="add">✔</span> link next to each slot you can attend.</p>
+<p>To show when you're going, <a href="{% url 'helper-list' %}">log in</a> and then click the <span class="add"><img src="/static/tick.svg" height="12px"></span> link next to each slot you can attend.</p>
 <div class="row">
   {% for morning_event in object_list %}
   <div class="date col-sm {{morning_event.klasses}}">
@@ -14,13 +14,13 @@
           {% for helper in event.helpers.all %}
             {{ helper }}
             {% if helper == LOGGED_IN_HELPER %}
-              <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete">🗙</span></a>
+              <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete"><img src="/static/cross.svg" height="12px" alt="remove yourself from this slot"></span></a>
             {% endif %}
             <br>
           {% endfor %}
 
          {% if LOGGED_IN_HELPER and LOGGED_IN_HELPER not in event.helpers.all %}
-            <a href="{% url 'event-claim' pk=event.pk %}"><span class="add">✔</span></a>
+            <a href="{% url 'event-claim' pk=event.pk %}"><span class="add"><img src="/static/tick.svg" height="12px" alt="add yourself to this slot"></span></a>
          {% endif %}
       </dd>
       </dl>
