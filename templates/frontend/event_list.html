@@ -1,27 +1,29 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h2>Events</h2>
-    <table>
-      <tr>
-        <th>Date</th>
-        <th>Slot</th>
-        <th>Helper</th>
-      </tr>
-        {% for event in object_list %}
-      <tr>
-        <td>{% if event.slot == 'MORNING' %}{{ event.date }}{% endif %}</td>
-        <td>{{ event.slot }}</td>
-        <td>
-            {% if not event.helper %}
-              <a href="{% url 'event-claim' pk=event.pk %}">claim</a>
-            {% elif event.helper.pk == request.session.helper %}
-              You (<a href="{% url 'event-unclaim' pk=event.pk %}">unclaim</a>)
-            {% else %}
-               {{ event.helper }}
-            {% endif %}
-        </td>
-        </tr>
-        {% endfor %}
-    </table>
+<h2>Events</h2>
+<div class="row">
+  {% for morning_event in object_list %}
+  <div class="date col-sm {{morning_event.klasses}}">
+    {% for event in morning_event.events_on_same_day %}
+      {% if forloop.first %}<h4 class="date-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d N" }}</h4>{% endif %}
+      <dl>
+        <dt>{{ event.get_slot_display }}</dt>
+        <dd>
+        {% if request.session.helper %}
+          {% if not event.helper %}
+            <a href="{% url 'event-claim' pk=event.pk %}">claim</a>
+          {% elif event.helper.pk == request.session.helper %}
+              you <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete">🗙</span></a>
+          {% else %}
+              {{ event.helper }}
+          {% endif %}
+        {% else %}
+            {{ event.helper }}
+        {% endif %}
+      </dd>
+      </dl>
+    {% endfor %}
+  </div>
+  {% if morning_event.is_sunday %}</div><div class="row">{% endif %}{% endfor %}
+</div>
 {% endblock %}

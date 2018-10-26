@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from frontend.models import Event
 import django.db
 from datetime import timedelta, date
+from frontend.views import get_most_recent_monday
 
 
 def daterange(start_date, end_date):
@@ -14,8 +15,8 @@ class Command(BaseCommand):
     Regular task.
     """
     def handle(self, *args, **options):
-        today = date.today()
-        for day in daterange(today, today + timedelta(days=40)):
+        day = get_most_recent_monday()
+        for day in daterange(day, day + timedelta(days=49)):
             for slot in [x[0] for x in Event.SLOT_CHOICES]:
                 Event.objects.create(
                     date=day,

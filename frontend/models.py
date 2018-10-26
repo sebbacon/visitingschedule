@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.urls import reverse
 
@@ -15,9 +17,8 @@ class Helper(models.Model):
 
 class Event(models.Model):
     SLOT_CHOICES = (
-        ('MORNING', 'Morning commute'),
-        ('EVENING', 'Evening commute'),
-        ('DINNER', 'Dinner'),
+        ('MORNING', 'am'),
+        ('EVENING', 'pm'),
     )
     helper = models.ForeignKey(
         Helper, blank=True, null=True, on_delete=models.SET_NULL)
@@ -33,3 +34,23 @@ class Event(models.Model):
 
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'pk': self.pk})
+
+    def events_on_same_day(self):
+        return Event.objects.filter(date=self.date)
+
+    @property
+    def klasses(self):
+        klasses = []
+        if self.is_sunday:
+            klasses.append("sunday")
+        if self.date < date.today():
+            klasses.append("past")
+        if all([x.helper for x in self.events_on_same_day()]):
+            klasses.append("full")
+        if all([not x.helper for x in self.events_on_same_day()]):
+            klasses.append("empty")
+        return " ".join(klasses)
+
+    @property
+    def is_sunday(self):
+        return self.date.weekday() == 6

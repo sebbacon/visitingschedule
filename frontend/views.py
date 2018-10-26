@@ -1,3 +1,6 @@
+from datetime import date
+from datetime import timedelta
+
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -36,15 +39,26 @@ def logout_helper(request):
     return redirect('event-list')
 
 
+def get_most_recent_monday():
+    start_day = date.today()
+    day_of_week = start_day.weekday()
+    while day_of_week != 0:
+        start_day = start_day - timedelta(days=1)
+        day_of_week = start_day.weekday()
+    return start_day
+
+
 class EventList(ListView):
     model = Event
 
     def get_queryset(self):
+        start_day = get_most_recent_monday()
+        events = Event.objects.filter(date__gte=start_day, slot='MORNING')
         self.slot = self.kwargs.get('slot', None)
         if self.slot:
-            return Event.objects.filter(slot=self.slot)
+            return events.filter(slot=self.slot)
         else:
-            return Event.objects.all()
+            return events
 
 
 class HelperList(ListView):
