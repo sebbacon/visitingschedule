@@ -29,7 +29,7 @@ server {
     }
 
     location /static {
-        alias   /var/www/visitingschedule/frontend/static;
+        alias   /var/www/visitingschedule/visitingschedule/frontend/static;
         expires max;
         access_log off;
     }
