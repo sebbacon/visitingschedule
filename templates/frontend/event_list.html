@@ -9,7 +9,7 @@
     {% for event in morning_event.events_on_same_day %}
       {% if forloop.first %}<h4 class="date-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}
       <dl>
-        <dt>{{ event.get_slot_display }}</dt>
+        <dt class="text-info">{{ event.get_slot_display }}</dt>
         <dd>
           {% for helper in event.helpers.all %}
             {{ helper }}

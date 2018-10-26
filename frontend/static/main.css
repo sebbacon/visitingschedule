@@ -42,3 +42,8 @@
 .empty .bullet {
   color: red;
 }
+
+dt {
+  font-weight: normal;
+  font-style: italic;
+}
