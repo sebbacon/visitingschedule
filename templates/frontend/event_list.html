@@ -10,20 +10,23 @@
   {% endif %}
   <div class="date col-sm {{morning_event.klasses}}">
     {% for event in morning_event.events_on_same_day %}
-      {% if forloop.first %}<h4 class="moddate-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}
+      {% if forloop.first %}<h4 class="moddate-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}s
       <dl>
         <dt class="text-info">{{ event.get_slot_display }}</dt>
         <dd>
           {% for helper in event.helpers.all %}
+          <div class="helper-row">
             {{ helper }}
             {% if helper == LOGGED_IN_HELPER %}
-              <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete"><img src="/static/cross.svg" height="12px" alt="remove yourself from this slot"></span></a>
+              <a class="adder" href="{% url 'event-unclaim' pk=event.pk %}"><img src="/static/cross.svg" height="12px" alt="remove yourself from this slot"></a>
             {% endif %}
-            <br>
+          </div>
           {% endfor %}
 
          {% if LOGGED_IN_HELPER and LOGGED_IN_HELPER not in event.helpers.all %}
-            <a href="{% url 'event-claim' pk=event.pk %}"><span class="add"><img src="/static/tick.svg" height="12px" alt="add yourself to this slot"></span></a>
+          <div class="helper-row">
+            <a class="adder" href="{% url 'event-claim' pk=event.pk %}"><img src="/static/tick.svg" height="12px" alt="add yourself to this slot"></a>
+          </div>
          {% endif %}
       </dd>
       </dl>

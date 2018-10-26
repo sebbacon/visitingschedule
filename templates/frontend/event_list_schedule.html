@@ -6,13 +6,15 @@
   <ul>
     {% for event in object_list %}
       <li>
+        <span class="helper-row">
         {{ event.date|date:"D d M" }}:
         {{ event.get_slot_display }}
         {% for helper in event.helpers.all %}
           {% if helper == LOGGED_IN_HELPER %}
-            <a href="{% url 'event-unclaim' pk=event.pk %}?came_from={{ request.path|urlencode }}"><span class="delete">🗙</span></a>
+            <a class="adder" data-action="hide" href="{% url 'event-unclaim' pk=event.pk %}?came_from={{ request.path|urlencode }}"><span class="delete">🗙</span></a>
           {% endif  %}
         {% endfor %}
+        </span>
       </li>
     {% endfor %}
   </ul>

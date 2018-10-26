@@ -11,27 +11,29 @@ from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import UpdateView
 
+from django_ajax.decorators import ajax
+
 from frontend.models import Event
 from frontend.models import Helper
 
 
+@ajax
 def claim_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     helper = get_object_or_404(Helper, pk=request.session['helper'])
     event.helpers.add(helper)
     event.save()
-    return redirect('event-list')
+    resp = '%s <a class="adder" href="/event/%s/unclaim"><span class="delete"><img src="/static/cross.svg" height="12px" alt="remove yourself from this slot"></span></a>' % (helper.name, event.pk)
+    return resp
 
 
+@ajax
 def unclaim_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.helpers.remove(request.session['helper'])
     event.save()
-    came_from = unquote(request.GET.get('came_from', ""))
-    if came_from:
-        return redirect(came_from)
-    else:
-        return redirect('event-list')
+    resp = '<a class="adder" href="/event/%s/claim"><img src="/static/tick.svg" height="12px" alt="add yourself to this slot"></a>' % event.pk
+    return resp
 
 
 def claim_helper(request, helper):
