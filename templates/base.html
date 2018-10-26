@@ -15,7 +15,7 @@
   <body>
     <div class="container">
   {% if request.session.helper %}
-  Logged in as {{ request.session.helper }}. <a href="{% url 'helper-logout' %}">Log out.</a> <a href="{% url 'helper-list' %}">Log in as someone else</a>
+  Logged in as {{ request.session.helper }}. <a href="{% url 'helper-logout' %}">Log out.</a> <a href="{% url 'helper-list' %}">Log in as someone else</a>. <a href="{% url 'helper-schedule' pk=request.session.helper %}">See my schedule</a>
   {% else %}
   Please <a href="{% url 'helper-list' %}">log in</a> to claim a slot.
   {% endif %}

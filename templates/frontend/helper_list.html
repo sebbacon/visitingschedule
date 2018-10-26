@@ -8,6 +8,7 @@
         <li>
           {{ helper }}
           <a href="{% url 'helper-claim' pk=helper.pk %}">login</a>
+          <a href="{% url 'helper-schedule' pk=helper.pk %}">see schedule</a>
         </li>
         {% endfor %}
     </ul>

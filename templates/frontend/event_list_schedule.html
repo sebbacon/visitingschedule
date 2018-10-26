@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Schedule for XXX</h2>
+<div>
+  <ul>
+    {% for morning_event in object_list %}
+      <li>
+      {% for event in morning_event.events_on_same_day_for_same_helper %}
+        {% if forloop.first %}
+         {{ event.date|date:"D d M" }}:
+        {% endif %}
+        {{ event.get_slot_display }}
+        {% if event.helper.pk == request.session.helper %}
+          <a href="{% url 'event-unclaim' pk=event.pk %}?came_from={{ request.path|urlencode }}"><span class="delete">🗙</span></a>
+        {% endif  %}
+        {% if not forloop.last %}/{% endif %}
+
+      {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+from urllib.parse import unquote
 from datetime import date
 from datetime import timedelta
 
@@ -26,7 +27,11 @@ def unclaim_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.helper = None
     event.save()
-    return redirect('event-list')
+    came_from = unquote(request.GET.get('came_from', ""))
+    if came_from:
+        return redirect(came_from)
+    else:
+        return redirect('event-list')
 
 
 def claim_helper(request, pk):
@@ -59,6 +64,14 @@ class EventList(ListView):
             return events.filter(slot=self.slot)
         else:
             return events
+
+
+class HelperEventList(EventList):
+    template_name = 'frontend/event_list_schedule.html'
+
+    def get_queryset(self):
+        events = super().get_queryset()
+        return events.filter(helper=self.kwargs['pk'])
 
 
 class HelperList(ListView):

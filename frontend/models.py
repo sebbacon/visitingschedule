@@ -38,6 +38,9 @@ class Event(models.Model):
     def events_on_same_day(self):
         return Event.objects.filter(date=self.date)
 
+    def events_on_same_day_for_same_helper(self):
+        return Event.objects.filter(date=self.date, helper=self.helper)
+
     @property
     def klasses(self):
         klasses = []

@@ -23,6 +23,7 @@ from frontend.views import EventUpdate
 from frontend.views import HelperCreate
 from frontend.views import HelperDelete
 from frontend.views import HelperUpdate
+from frontend.views import HelperEventList
 from frontend.views import HelperList
 from frontend.views import HelperDetailView
 from frontend.views import claim_event
@@ -38,6 +39,8 @@ urlpatterns = [
     path('event/<int:pk>/claim', claim_event, name='event-claim'),
     path('event/<int:pk>/unclaim', unclaim_event, name='event-unclaim'),
     path('helper/<str:pk>/claim', claim_helper, name='helper-claim'),
+    path('helper/<str:pk>/schedule',
+         HelperEventList.as_view(), name='helper-schedule'),
     path('helper/logout', logout_helper, name='helper-logout'),
     path('helpers/', HelperList.as_view(), name='helper-list'),
     path('helper/add/',
