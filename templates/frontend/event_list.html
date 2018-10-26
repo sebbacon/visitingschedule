@@ -10,7 +10,7 @@
   {% endif %}
   <div class="date col-sm {{morning_event.klasses}}">
     {% for event in morning_event.events_on_same_day %}
-      {% if forloop.first %}<h4 class="moddate-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}s
+      {% if forloop.first %}<h4 class="moddate-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}
       <dl>
         <dt class="text-info">{{ event.get_slot_display }}</dt>
         <dd>
