@@ -38,7 +38,6 @@ class Event(models.Model):
     def events_on_same_day(self):
         return Event.objects.filter(date=self.date)
 
-
     @property
     def klasses(self):
         klasses = []
@@ -46,6 +45,8 @@ class Event(models.Model):
             klasses.append("sunday")
         if self.date < date.today():
             klasses.append("past")
+        if self.date == date.today():
+            klasses.append("today")
         if all([x.helpers.count() > 0 for x in self.events_on_same_day()]):
             klasses.append("full")
         if all([not x.helpers.count() > 0 for x in self.events_on_same_day()]):

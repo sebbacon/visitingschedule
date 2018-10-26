@@ -5,9 +5,12 @@
 <p>To show when you're going, <a href="{% url 'helper-list' %}">log in</a> and then click the <span class="add"><img src="/static/tick.svg" height="12px"></span> link next to each slot you can attend.</p>
 <div class="row">
   {% for morning_event in object_list %}
+  {% if 'today' in morning_event.klasses %}
+  <a name="today"></a>
+  {% endif %}
   <div class="date col-sm {{morning_event.klasses}}">
     {% for event in morning_event.events_on_same_day %}
-      {% if forloop.first %}<h4 class="date-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}
+      {% if forloop.first %}<h4 class="moddate-header"><span class="bullet">&bull;</span>{{ event.date|date:"D d M" }}</h4>{% endif %}
       <dl>
         <dt class="text-info">{{ event.get_slot_display }}</dt>
         <dd>
