@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Events</h2>
+<h2>Calendar</h2>
 <div class="row">
   {% for morning_event in object_list %}
   <div class="date col-sm {{morning_event.klasses}}">
@@ -9,17 +9,17 @@
       <dl>
         <dt>{{ event.get_slot_display }}</dt>
         <dd>
-        {% if request.session.helper %}
-          {% if not event.helper %}
-            <a href="{% url 'event-claim' pk=event.pk %}">claim</a>
-          {% elif event.helper.pk == request.session.helper %}
-              you <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete">🗙</span></a>
-          {% else %}
-              {{ event.helper }}
-          {% endif %}
-        {% else %}
-            {{ event.helper }}
-        {% endif %}
+          {% for helper in event.helpers.all %}
+            {{ helper }}
+            {% if helper == LOGGED_IN_HELPER %}
+              <a href="{% url 'event-unclaim' pk=event.pk %}"><span class="delete">🗙</span></a>
+            {% endif %}
+            <br>
+          {% endfor %}
+
+         {% if LOGGED_IN_HELPER not in event.helpers.all %}
+            <a href="{% url 'event-claim' pk=event.pk %}">go</a>
+         {% endif %}
       </dd>
       </dl>
     {% endfor %}

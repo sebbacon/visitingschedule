@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Helpers</h2>
-    <p>Not in this list? Add yourself <a href="{% url 'helper-add' %}">here</a>.</p>
-    <ul>
-        {% for helper in object_list %}
-        <li>
-          {{ helper }}
-          <a href="{% url 'helper-claim' pk=helper.pk %}">login</a>
-          <a href="{% url 'helper-schedule' pk=helper.pk %}">see schedule</a>
-        </li>
-        {% endfor %}
-    </ul>
+<h2>Helpers</h2>
+<div class="alert alert-primary" role="alert">Click a name to log in as that person.</div>
+<p>Not in this list? Add yourself <a href="{% url 'helper-add' %}">here</a>.</p>
+{% for helper in object_list %}
+<div class="login-button row">
+  <div class="col">
+    <a href="{% url 'helper-claim' helper=helper.pk %}" class="btn btn-info">{{ helper }}</a>
+  </div>
+  <div class="col col-10">
+    <a href="{% url 'helper-schedule' helper=helper.pk %}">see schedule</a>
+  </div>
+</div>
+{% endfor %}
 {% endblock %}

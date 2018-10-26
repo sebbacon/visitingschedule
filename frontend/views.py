@@ -18,14 +18,14 @@ from frontend.models import Helper
 def claim_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     helper = get_object_or_404(Helper, pk=request.session['helper'])
-    event.helper = helper
+    event.helpers.add(helper)
     event.save()
     return redirect('event-list')
 
 
 def unclaim_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    event.helper = None
+    event.helpers.remove(request.session['helper'])
     event.save()
     came_from = unquote(request.GET.get('came_from', ""))
     if came_from:
@@ -34,8 +34,8 @@ def unclaim_event(request, pk):
         return redirect('event-list')
 
 
-def claim_helper(request, pk):
-    request.session['helper'] = pk
+def claim_helper(request, helper):
+    request.session['helper'] = helper
     return redirect('event-list')
 
 
@@ -59,19 +59,16 @@ class EventList(ListView):
     def get_queryset(self):
         start_day = get_most_recent_monday()
         events = Event.objects.filter(date__gte=start_day, slot='MORNING')
-        self.slot = self.kwargs.get('slot', None)
-        if self.slot:
-            return events.filter(slot=self.slot)
-        else:
-            return events
+        return events
 
 
-class HelperEventList(EventList):
+class HelperEventList(ListView):
     template_name = 'frontend/event_list_schedule.html'
 
     def get_queryset(self):
-        events = super().get_queryset()
-        return events.filter(helper=self.kwargs['pk'])
+        start_day = get_most_recent_monday()
+        return Event.objects.filter(
+            date__gte=start_day, helpers=self.kwargs['helper'])
 
 
 class HelperList(ListView):

@@ -23,6 +23,9 @@
   color: orange;
 }
 
+.login-button {
+  margin-bottom: 3px;
+}
 
 .delete {
   color: red;

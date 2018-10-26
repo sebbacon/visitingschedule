@@ -12,7 +12,7 @@ class Helper(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('helper-detail', kwargs={'pk': self.pk})
+        return reverse('helper-detail', kwargs={'helper': self.pk})
 
 
 class Event(models.Model):
@@ -20,14 +20,14 @@ class Event(models.Model):
         ('MORNING', 'am'),
         ('EVENING', 'pm'),
     )
-    helper = models.ForeignKey(
-        Helper, blank=True, null=True, on_delete=models.SET_NULL)
+    helpers = models.ManyToManyField(
+        Helper, blank=True)
     date = models.DateField()
     slot = models.CharField(choices=SLOT_CHOICES, max_length=12)
 
     def __str__(self):
-        if self.helper:
-            filled_str = "filled by {}".format(self.helper)
+        if self.helpers:
+            filled_str = "filled by {}".format(",".join([str(h) for h in self.helpers.all()]))
         else:
             filled_str = "currently unfilled"
         return "{} slot on {} {}".format(self.slot, self.date, filled_str)
@@ -38,8 +38,6 @@ class Event(models.Model):
     def events_on_same_day(self):
         return Event.objects.filter(date=self.date)
 
-    def events_on_same_day_for_same_helper(self):
-        return Event.objects.filter(date=self.date, helper=self.helper)
 
     @property
     def klasses(self):
@@ -48,9 +46,9 @@ class Event(models.Model):
             klasses.append("sunday")
         if self.date < date.today():
             klasses.append("past")
-        if all([x.helper for x in self.events_on_same_day()]):
+        if all([x.helpers.count() > 0 for x in self.events_on_same_day()]):
             klasses.append("full")
-        if all([not x.helper for x in self.events_on_same_day()]):
+        if all([not x.helpers.count() > 0 for x in self.events_on_same_day()]):
             klasses.append("empty")
         return " ".join(klasses)
 

@@ -1,4 +1,7 @@
 {% load static %}
+{% url 'event-list' as events_list_url %}
+{% url 'helper-list' as helper_list_url %}
+{% url 'helper-schedule' as helper_schedule_url %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -6,20 +9,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="{% static "bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "main.css" %}">
     <title>Hello, world!</title>
   </head>
   <body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% if request.path == events_list_url %}active{% endif %}">
+        <a class="nav-link" href="{% url 'event-list' %}">View calendar<span class="sr-only">(current)</span></a>
+      </li>
+      {% if LOGGED_IN_HELPER %}
+      <li>
+        <a class="nav-link {% if request.path == helper_schedule_url %}active{% endif %}" href="{% url 'helper-schedule' helper=request.session.helper %}">See my schedule</a>
+      </li>
+      <li>
+        <a class="nav-link" href="{% url 'helper-logout' %}">Log out {{ LOGGED_IN_HELPER.name }}</a>
+      </li>
+      {% else %}
+      <li>
+        <a class="nav-link {% if request.path == helper_list_url %}active{% endif %}" href="{% url 'helper-list' %}">Log in</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
     <div class="container">
-  {% if request.session.helper %}
-  Logged in as {{ request.session.helper }}. <a href="{% url 'helper-logout' %}">Log out.</a> <a href="{% url 'helper-list' %}">Log in as someone else</a>. <a href="{% url 'helper-schedule' pk=request.session.helper %}">See my schedule</a>
-  {% else %}
-  Please <a href="{% url 'helper-list' %}">log in</a> to claim a slot.
-  {% endif %}
-  {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

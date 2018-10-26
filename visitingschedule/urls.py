@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.urls import path
 from django.urls import reverse_lazy
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 
 from frontend.views import EventList
 from frontend.views import EventUpdate
@@ -34,19 +35,20 @@ from frontend.views import logout_helper
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='events/'), name='go-to-django'),
     path('events/', EventList.as_view(), name='event-list'),
     path('event/<int:pk>/', EventUpdate.as_view(), name='event-update'),
     path('event/<int:pk>/claim', claim_event, name='event-claim'),
     path('event/<int:pk>/unclaim', unclaim_event, name='event-unclaim'),
-    path('helper/<str:pk>/claim', claim_helper, name='helper-claim'),
-    path('helper/<str:pk>/schedule',
+    path('helper/<str:helper>/claim', claim_helper, name='helper-claim'),
+    path('helper/<str:helper>/schedule',
          HelperEventList.as_view(), name='helper-schedule'),
     path('helper/logout', logout_helper, name='helper-logout'),
     path('helpers/', HelperList.as_view(), name='helper-list'),
     path('helper/add/',
          HelperCreate.as_view(success_url=reverse_lazy('event-list')),
          name='helper-add', ),
-    path('helper/<str:pk>/edit', HelperUpdate.as_view(), name='helper-update'),
-    path('helper/<str:pk>/', HelperDetailView.as_view(), name='helper-detail'),
-    path('helper/<str:pk>/delete/', HelperDelete.as_view(), name='helper-delete'),
+    path('helper/<str:helper>/edit', HelperUpdate.as_view(), name='helper-update'),
+    path('helper/<str:helper>/', HelperDetailView.as_view(), name='helper-detail'),
+    path('helper/<str:helper>/delete/', HelperDelete.as_view(), name='helper-delete'),
 ]
