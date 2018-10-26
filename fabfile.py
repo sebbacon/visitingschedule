@@ -39,8 +39,8 @@ def update_from_git():
 
 
 def setup_nginx():
-    run('ln -sf %s/deploy/supervisor-%s.conf /etc/supervisor/conf.d/%s.conf' % (env.path, env.app, env.app))
-    run('ln -sf %s/deploy/nginx-%s /etc/nginx/sites-enabled/%s' % (env.path, env.app, env.app))
+    run('ln -sf %s/visitingschedule/deploy/supervisor-%s.conf /etc/supervisor/conf.d/%s.conf' % (env.path, env.app, env.app))
+    run('ln -sf %s/visitingschedule/deploy/nginx-%s /etc/nginx/sites-enabled/%s' % (env.path, env.app, env.app))
     run('chown -R www-data:www-data /var/www/%s/{visitingschedule,venv}' % (env.app))
     run('service supervisor restart')
     run('nginx -t && service nginx stop && service nginx start')
@@ -49,7 +49,7 @@ def setup_nginx():
 def run_migrations():
     if env.environment == 'live':
         with prefix('source venv/bin/activate'):
-            run('cd visitingschedule/ && python manage.py migrate')
+            run('cd visitingschedule && python manage.py migrate --settings=visitingschedule.settings')
     else:
         warn("Refusing to run migrations in staging environment")
 
