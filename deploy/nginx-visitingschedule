@@ -1,0 +1,36 @@
+upstream visitingschedule {
+    server unix:/tmp/gunicorn-visitingschedule.sock fail_timeout=0;
+    keepalive 60;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name visit.op2.org.uk;
+
+    #auth_basic "Private";
+    #auth_basic_user_file /etc/nginx/htpasswd-visitingschedule.users;
+
+    access_log /var/log/nginx/visitingschedule.access.log;
+    error_log /var/log/nginx/visitingschedule.error.log;
+
+    resolver 8.8.8.8 8.8.4.4 valid=300s;
+    resolver_timeout 5s;
+
+    client_max_body_size 200M;
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+
+        proxy_pass http://visitingschedule;
+    }
+
+    location /static {
+        alias   /var/www/visitingschedule/frontend/static;
+        expires max;
+        access_log off;
+    }
+}
