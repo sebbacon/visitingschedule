@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Calendar</h2>
+<p>There are morning slots and afternoon slots.</p>
+<p>To show you're going in a particular slot, <a href="{% url 'helper-list' %}">log in</a> and then click the <span class="add">✔</span> link next to each slot you can attend.</p>
 <div class="row">
   {% for morning_event in object_list %}
   <div class="date col-sm {{morning_event.klasses}}">
@@ -17,8 +19,8 @@
             <br>
           {% endfor %}
 
-         {% if LOGGED_IN_HELPER not in event.helpers.all %}
-            <a href="{% url 'event-claim' pk=event.pk %}">go</a>
+         {% if LOGGED_IN_HELPER and LOGGED_IN_HELPER not in event.helpers.all %}
+            <a href="{% url 'event-claim' pk=event.pk %}"><span class="add">✔</span></a>
          {% endif %}
       </dd>
       </dl>

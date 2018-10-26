@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Schedule for {{ username }}</h2>
+<h2>Schedule for {{ HELPER.name }}</h2>
 {% if object_list %}
   <ul>
     {% for event in object_list %}

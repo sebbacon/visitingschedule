@@ -31,6 +31,10 @@
   color: red;
 }
 
+.add {
+  color: green;
+}
+
 .full .bullet {
   color: green;
 }
